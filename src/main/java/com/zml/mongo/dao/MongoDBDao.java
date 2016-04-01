@@ -1,68 +1,75 @@
 package com.zml.mongo.dao;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.bson.Document;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 
 public interface MongoDBDao {
-    /** 
-     *  
-     * 方法名：getCollection 
-     * 描述：获取指定mongodb数据库的collection集合 
-     * @param dbName    数据库名 
-     * @param collectionName    数据库集合 
-     * @return 
-     */  
+	/**
+	 * 获取指定mongodb数据库的collection集合 
+	 * @param collectionName	
+	 * @return
+	 */
     public MongoCollection<Document> getCollection(String collectionName);  
-    /** 
-     *  
-     * 方法名：inSert 
-     * 描述：向指定的数据库中添加给定的keys和相应的values 
-     * @param dbName 
-     * @param collectionName 
-     * @param keys 
-     * @param values 
-     * @return 
-     */  
-    public boolean insert(String collectionName, BasicDBObject bean);  
-    /** 
-     *  
-     * 方法名：delete 
-     * 描述：删除数据库dbName中，指定keys和相应values的值 
-     * @param dbName 
-     * @param collectionName 
-     * @param keys 
-     * @param values 
-     * @return 
-     */  
-    public boolean delete(String collectionName, String[] keys, Object[] values);  
-    /** 
-     *  
-     * 方法名：find 
-     * 描述：从数据库dbName中查找指定keys和相应values的值 
-     * @param dbName 
-     * @param collectionName 
-     * @param keys 
-     * @param values 
-     * @param num 
-     * @return 
-     */  
-    public ArrayList<DBObject> find(String collectionName, String[] keys, Object[] values, int num);  
-    /** 
-     *  
-     * 方法名：update 
-     * 描述：更新数据库dbName，用指定的newValue更新oldValue 
-     * @param dbName 
-     * @param collectionName 
-     * @param oldValue 
-     * @param newValue 
-     * @return 
-     */  
-    public boolean update(String collectionName, DBObject oldValue, DBObject newValue);  
+    
+    /**
+     * 插入一个document
+     * @param collectionName
+     * @param document
+     */
+    public void insertOne(String collectionName, Document document);  
+    
+    /**
+     * 插入多个document
+     * @param collectionName
+     * @param documents
+     */
+    public void insertMany(String collectionName, List<Document> documents);
+   
+    /**
+     * 删除指定collectionName中的document
+     * @param collectionName
+     * @param document
+     * @return
+     */
+    public void deleteOne(String collectionName, Document document);  
+    
+    /**
+     * 删除多个
+     * @param collectionName
+     * @param document
+     * @return
+     */
+    public void deleteMoney(String collectionName, Document document);  
+    
+    /**
+     * 根据collectionName查询所有
+     * @param collectionName
+     * @param keys
+     * @param values
+     * @param num
+     * @return
+     */
+    public FindIterable<Document> findAll(String collectionName);  
+    
+    /**
+     * 条件查询
+     * @param collectionName
+     * @param document
+     * @return
+     */
+    public FindIterable<Document> find(String collectionName, Document document);
+    
+    /**
+     * 更新
+     * @param document1
+     * @param document2
+     * @return
+     */
+    public boolean updateOne(Document document1, Document document2);  
     /** 
      *  
      * 方法名：isExit 

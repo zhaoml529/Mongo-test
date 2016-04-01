@@ -1,21 +1,20 @@
 package com.zml.mongo.dao.impl;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.bson.Document;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoException;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.zml.mongo.dao.MongoDBDao;
 
 public class MongoDBDaoImpl implements MongoDBDao {
 
-	private static String DBName = "MongoDBTest";//数据库名
+	private static String DBName = "GithubDB";//数据库名
     private static String hostName = "localhost";//主机名
 	
 	 /** 
@@ -29,7 +28,7 @@ public class MongoDBDaoImpl implements MongoDBDao {
      *  
      * 私有的构造函数 
      */  
-    private MongoDBDaoImpl(){  
+    public MongoDBDaoImpl(){  
         if(mongoClient == null){  
             MongoClientOptions.Builder build = new MongoClientOptions.Builder();          
             build.connectionsPerHost(50);   //与目标数据库能够建立的最大connection数量为50  
@@ -73,36 +72,51 @@ public class MongoDBDaoImpl implements MongoDBDao {
         return db;
     }
 
+    @Override
 	public MongoCollection<Document> getCollection(String collectionName) {
 		return this.getDB().getCollection(collectionName);
 	}
 
-	public boolean insert(String collectionName, BasicDBObject bean) {
+	@Override
+	public void insertOne(String collectionName, Document document) {
+		this.getCollection(collectionName).insertOne(document);
+	}
+	
+	@Override
+	public void insertMany(String collectionName, List<Document> documents) {
+		this.getCollection(collectionName).insertMany(documents);
+	}
+
+	@Override
+	public void deleteOne(String collectionName, Document document) {
+		this.getCollection(collectionName).deleteOne(document);
+	}
+
+	@Override
+	public void deleteMoney(String collectionName, Document document) {
+		this.getCollection(collectionName).deleteMany(document);
+	}
+	
+	@Override
+	public FindIterable<Document> findAll(String collectionName) {
+		return this.getCollection(collectionName).find();
+	}
+	
+	@Override
+	public FindIterable<Document> find(String collectionName, Document document) { 
+		return this.getCollection(collectionName).find(document);
+	}
+
+	@Override
+	public boolean updateOne(Document document, Document document2) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public boolean delete(String collectionName, String[] keys, Object[] values) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public ArrayList<DBObject> find(String collectionName, String[] keys,
-			Object[] values, int num) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public boolean update(String collectionName, DBObject oldValue,
-			DBObject newValue) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	@Override
 	public boolean isExit(String collectionName, String key, Object value) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 
 }
