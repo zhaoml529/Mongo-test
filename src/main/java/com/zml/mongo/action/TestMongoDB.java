@@ -3,6 +3,7 @@ package com.zml.mongo.action;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -18,7 +19,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mongodb.Block;
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.model.Filters;
 import com.zml.mongo.dao.impl.MongoDBDaoImpl;
 import com.zml.mongo.entity.StarEntity;
 import com.zml.mongo.util.TimestampTypeAdapter;
@@ -48,7 +48,10 @@ public class TestMongoDB {
 	 * @return
 	 */
 	public List<StarEntity> getEntity(String json) {
-		Gson gson = new Gson();//new一个Gson对象
+		//Gson gson = new Gson();//new一个Gson对象
+		final Gson gson = new GsonBuilder()
+		.registerTypeAdapter(Timestamp.class,new TimestampTypeAdapter())
+		.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		JsonParser parser = new JsonParser();
 	    JsonArray Jarray = parser.parse(json).getAsJsonArray();
 	    List<StarEntity> starList = new ArrayList<StarEntity>();
@@ -75,8 +78,8 @@ public class TestMongoDB {
 			document.put("fork", star.getFork());
 			document.put("url", star.getUrl());
 			document.put("forks_url", star.getForks_url());
-			document.put("created_at", star.getCreated_at());
-			document.put("updated_at", star.getUpdated_at());
+			//document.put("created_at", star.getCreated_at());
+			//document.put("updated_at", star.getUpdated_at());
 			document.put("forks_count", star.getForks_count());
 			document.put("watchers_count", star.getWatchers_count());
 			listDoc.add(document);
@@ -92,48 +95,60 @@ public class TestMongoDB {
 		//final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		
 		final Gson gson = new GsonBuilder()
-				.registerTypeAdapter(Timestamp.class,new TimestampTypeAdapter())
+				.registerTypeAdapter(Date.class,new TimestampTypeAdapter())
 				.setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+		//final Gson gson = GsonBuilderUtil.create();
 		final List<StarEntity> starList = new ArrayList<StarEntity>();
 		FindIterable<Document> iterable = this.db.findAll("star_info");
 		iterable.forEach(new Block<Document>() {
 		    @Override
 		    public void apply(final Document document) {
 		    	System.out.println(document.toJson());
-		    	
 		    	StarEntity star = gson.fromJson(document.toJson(), StarEntity.class);
 		    	starList.add(star);
-		    	//解析jsonarray
-/*		    	JsonParser parser = new JsonParser();
-			    JsonArray Jarray = parser.parse(document.toJson()).getAsJsonArray();
-			    for(JsonElement obj : Jarray ){
-			    	StarEntity star  = gson.fromJson( obj , StarEntity.class);
-			    	starList.add(star);
-			    }
-*/		    }
+		    }
+		});
+		return starList;
+	}
+	
+	public List<StarEntity> find() {
+		final Gson gson = new Gson();//new一个Gson对象
+		final List<StarEntity> starList = new ArrayList<StarEntity>();
+		Document document = new Document();
+		document.put("id", "27437239");
+		document.put("name", "SpringOA");
+		FindIterable<Document> iterable = this.db.find("star_info", document);
+		iterable.forEach(new Block<Document>() {
+		    @Override
+		    public void apply(final Document document) {
+		    	System.out.println(document.toJson());
+		    	StarEntity star = gson.fromJson(document.toJson(), StarEntity.class);
+		    	starList.add(star);
+		    }
 		});
 		return starList;
 	}
 	
 	public void delete() {
-		this.db.deleteOne("GithubDB", new Document("id","25348756"));
+		//this.db.deleteOne("star_info", new Document("id","25348756"));
+		this.db.deleteMoney("star_info", new Document());
 	}
 	
 	public static void main(String[] args) throws IOException {
 		TestMongoDB mongo = new TestMongoDB();
-		/*List<StarEntity> list = mongo.getEntity(mongo.run());
-		for(StarEntity star : list) {
-			System.out.println(star.getName());
-		}
-		mongo.insertMany(list);
-		*/
+		//插入
+		//List<StarEntity> list = mongo.getEntity(mongo.run());
+		//mongo.insertMany(list);
 		
+		//查询
 		/*List<StarEntity> starList = mongo.findAll();
 		for(StarEntity star : starList) {
-			System.out.println(star.getName()+"---"+star.getCreated_at());
+			System.out.println(star.get_id().get$oid()+"---"+star.getName()+"---"+star.getId());
 		}*/
 		
-		mongo.delete();
+		mongo.find();
+		
+		//mongo.delete();
 		
 		//System.out.println(mongo.getEntity(mongo.run()));
 	}
