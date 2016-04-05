@@ -27,9 +27,9 @@ public class StarEntity implements Serializable {
 	
 	private String forks_url;
 	
-	private DateTime created_at;
-	
-	private DateTime updated_at;
+//	private Date created_at;
+//	
+//	private Date updated_at;
 	
 	private Integer forks_count;
 	
@@ -139,22 +139,5 @@ public class StarEntity implements Serializable {
 	public void set_id(Oid _id) {
 		this._id = _id;
 	}
-
-	public DateTime getCreated_at() {
-		return created_at;
-	}
-
-	public void setCreated_at(DateTime created_at) {
-		this.created_at = created_at;
-	}
-
-	public DateTime getUpdated_at() {
-		return updated_at;
-	}
-
-	public void setUpdated_at(DateTime updated_at) {
-		this.updated_at = updated_at;
-	}
-	
 
 }
