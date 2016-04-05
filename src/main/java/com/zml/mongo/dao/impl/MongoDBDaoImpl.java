@@ -93,7 +93,7 @@ public class MongoDBDaoImpl implements MongoDBDao {
 	}
 
 	@Override
-	public void deleteMoney(String collectionName, Document document) {
+	public void deleteMany(String collectionName, Document document) {
 		this.getCollection(collectionName).deleteMany(document);
 	}
 	

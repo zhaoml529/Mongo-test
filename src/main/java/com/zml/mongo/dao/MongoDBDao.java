@@ -43,7 +43,7 @@ public interface MongoDBDao {
      * @param document
      * @return
      */
-    public void deleteMoney(String collectionName, Document document);  
+    public void deleteMany(String collectionName, Document document);  
     
     /**
      * 根据collectionName查询所有

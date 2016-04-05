@@ -131,7 +131,7 @@ public class TestMongoDB {
 	
 	public void delete() {
 		//this.db.deleteOne("star_info", new Document("id","25348756"));
-		this.db.deleteMoney("star_info", new Document());
+		this.db.deleteMany("star_info", new Document());
 	}
 	
 	public static void main(String[] args) throws IOException {
